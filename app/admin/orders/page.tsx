@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Heading } from "@/components/ui/Heading";
 import { ShoppingCart, User, Clock, CheckCircle, Truck, MoreVertical, Smartphone, Check, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -107,7 +107,7 @@ export default function AdminOrdersPage() {
                       {order.orderStatus}
                    </div>
                 </td>
-                <td className="p-6 font-black text-white">${order.totalAmount}.00</td>
+                <td className="p-6 font-black text-white">{formatCurrency(order.totalAmount)}</td>
                 <td className="p-6 text-right">
                   <div className="flex justify-end gap-2">
                     {order.paymentStatus === "pending" && (

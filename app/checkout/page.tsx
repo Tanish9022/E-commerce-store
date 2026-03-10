@@ -9,6 +9,7 @@ import { useCartStore } from "@/store/useCartStore";
 import { ShoppingBag, ArrowRight, ShieldCheck, CheckCircle, Smartphone } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { formatCurrency } from "@/lib/utils";
 
 export default function CheckoutPage() {
   const { items, getTotalPrice, clearCart } = useCartStore();
@@ -129,7 +130,7 @@ export default function CheckoutPage() {
                             Size: {item.size} / Qty: {item.quantity}
                           </p>
                         </div>
-                        <p className="font-black">${item.price * item.quantity}.00</p>
+                        <p className="font-black">{formatCurrency(item.price * item.quantity)}</p>
                       </div>
                     ))}
                   </div>
@@ -148,15 +149,15 @@ export default function CheckoutPage() {
                   <div className="space-y-4">
                     <div className="flex justify-between text-sm">
                       <span className="text-zinc-500">Subtotal</span>
-                      <span className="font-bold">${getTotalPrice()}.00</span>
+                      <span className="font-bold">{formatCurrency(getTotalPrice())}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-zinc-500">Tax</span>
-                      <span>$0.00</span>
+                      <span>{formatCurrency(0)}</span>
                     </div>
                     <div className="pt-4 border-t border-white/5 flex justify-between items-end">
                       <span className="text-xs font-black uppercase tracking-widest">Total</span>
-                      <span className="text-3xl font-black text-accent">${getTotalPrice()}.00</span>
+                      <span className="text-3xl font-black text-accent">{formatCurrency(getTotalPrice())}</span>
                     </div>
                   </div>
 

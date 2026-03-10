@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 import { ShoppingBag } from "lucide-react";
 
 interface ProductCardProps {
@@ -11,69 +11,57 @@ interface ProductCardProps {
   price: number;
   category: string;
   tag?: string;
-  imageUrl?: string;
   className?: string;
 }
 
-const ProductCard = ({
-  id,
-  name,
-  price,
-  category,
-  tag,
-  imageUrl,
-  className,
-}: ProductCardProps) => {
+const ProductCard = ({ id, name, price, category, tag, className }: ProductCardProps) => {
   return (
-    <div className={cn("group cursor-pointer hover-scale", className)}>
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-white/5 mb-8 group-hover:border-accent/30 transition-all duration-700">
-        {tag && (
-          <div className="absolute top-8 left-8 z-20">
-            <span className="px-5 py-2.5 rounded-full bg-white text-black text-[9px] font-black uppercase tracking-widest shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-              {tag}
-            </span>
+    <div className={cn("group cursor-pointer", className)}>
+      <Link href={`/products/${id}`}>
+        <div className="relative aspect-[3/4] bg-zinc-900 rounded-[2rem] overflow-hidden border border-white/5 transition-all duration-500 group-hover:border-accent/30">
+          {/* Image Placeholder */}
+          <div className="w-full h-full bg-gradient-to-br from-zinc-800 to-zinc-950 group-hover:scale-110 transition-transform duration-700" />
+          
+          {/* Status Tag */}
+          {tag && (
+            <div className="absolute top-6 left-6 z-10">
+              <span className="bg-accent text-black text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
+                {tag}
+              </span>
+            </div>
+          )}
+
+          {/* Quick Add Button */}
+          <div className="absolute bottom-6 right-6 z-10 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+            <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-black hover:bg-accent transition-colors">
+              <ShoppingBag className="w-5 h-5" />
+            </button>
           </div>
-        )}
-
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-700 z-10 flex flex-col items-center justify-center gap-4 px-10 translate-y-8 group-hover:translate-y-0">
-          <Link
-            href={`/products/${id}`}
-            className="w-full bg-white text-black py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] text-center hover:bg-accent transition-all duration-500 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(57,255,20,0.4)]"
-          >
-            Access Data
-          </Link>
-          <button className="w-full border border-white/10 text-white py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-white/5 transition-all duration-500 flex items-center justify-center gap-3">
-            <ShoppingBag className="w-4 h-4 text-zinc-400 group-hover/btn:text-white" />
-            Rapid Load
-          </button>
         </div>
+      </Link>
 
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={name}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-        ) : (
-          <div className="w-full h-full bg-zinc-800 transition-transform duration-700 group-hover:scale-110" />
-        )}
-      </div>
-
-      <div className="flex justify-between items-start px-2">
-        <div>
-          <h4 className="text-2xl font-black uppercase tracking-tight mb-1 group-hover:text-accent transition-colors">
+      <div className="mt-8 flex justify-between items-start px-2">
+        <div className="space-y-1">
+          <Heading size="xs" className="text-white tracking-tight leading-none truncate max-w-[200px]">
             {name}
-          </h4>
-          <p className="text-zinc-500 uppercase text-[10px] font-bold tracking-[0.2em]">
+          </Heading>
+          <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
             {category}
           </p>
         </div>
         <div className="text-right">
-          <p className="text-xl font-light text-accent">${price}.00</p>
+          <p className="text-xl font-light text-accent">{formatCurrency(price)}</p>
         </div>
       </div>
     </div>
   );
+};
+
+const Heading = ({ size, children, className }: any) => {
+  const sizes = {
+    xs: "text-sm md:text-base font-black uppercase tracking-widest",
+  };
+  return <h3 className={cn((sizes as any)[size], className)}>{children}</h3>;
 };
 
 export { ProductCard };

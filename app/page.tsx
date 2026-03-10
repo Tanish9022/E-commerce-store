@@ -8,10 +8,23 @@ import { SectionWrapper } from "@/components/ui/SectionWrapper";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { Button } from "@/components/ui/Button";
 import { Sparkles } from "lucide-react";
-import { PRODUCTS } from "@/data/products";
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  const featuredProducts = PRODUCTS.slice(0, 3);
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("/api/admin/products");
+        const data = await res.json();
+        setFeaturedProducts(data.slice(0, 3));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   return (
     <main className="bg-black text-white">
@@ -92,12 +105,12 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {featuredProducts.map((product) => (
               <ProductCard 
-                key={product.id}
-                id={product.id}
+                key={product._id}
+                id={product._id}
                 name={product.name}
                 price={product.price}
                 category={product.category}
-                tag={product.tag}
+                tag={product.stock < 10 ? "Limited" : ""}
               />
             ))}
           </div>

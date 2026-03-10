@@ -10,6 +10,7 @@ import { ImageGallery } from "@/components/shop/ImageGallery";
 import { SizeSelector } from "@/components/shop/SizeSelector";
 import { useCartStore } from "@/store/useCartStore";
 import { Sparkles, ShoppingBag, Paintbrush } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 import { PRODUCTS } from "@/data/products";
 
@@ -29,7 +30,6 @@ export default function ProductDetailPage() {
       size: selectedSize,
       quantity: 1,
     });
-    // Optional: show toast or open cart
   };
 
   const goToCustomize = () => {
@@ -56,7 +56,7 @@ export default function ProductDetailPage() {
                   {product.category} / Limited Drop
                 </div>
                 <Heading size="lg">{product.name}</Heading>
-                <p className="text-3xl font-light text-accent">${product.price}.00</p>
+                <p className="text-3xl font-light text-accent">{formatCurrency(product.price)}</p>
               </div>
 
               <p className="text-zinc-500 text-lg font-light leading-relaxed">
@@ -75,20 +75,20 @@ export default function ProductDetailPage() {
                     variant="accent" 
                     size="xl" 
                     className="w-full"
-                    onClick={goToCustomize}
+                    onClick={handleAddToCart}
                   >
-                    <Paintbrush className="w-5 h-5 mr-3" />
-                    Customize Your Design
+                    <ShoppingBag className="w-5 h-5 mr-3" />
+                    Add to Cart — {formatCurrency(product.price)}
                   </Button>
                   
                   <Button 
                     variant="outline" 
                     size="xl" 
                     className="w-full"
-                    onClick={handleAddToCart}
+                    onClick={goToCustomize}
                   >
-                    <ShoppingBag className="w-5 h-5 mr-3" />
-                    Add to Cart — ${product.price}.00
+                    <Paintbrush className="w-5 h-5 mr-3" />
+                    Customize This Design
                   </Button>
                 </div>
               </div>

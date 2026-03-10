@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCartStore, CartItem as CartItemType } from "@/store/useCartStore";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Heading } from "@/components/ui/Heading";
 
@@ -55,7 +55,7 @@ const CartItem = ({ item }: { item: CartItemType }) => {
               <Plus className="w-3 h-3" />
             </button>
           </div>
-          <p className="text-sm font-black text-accent">${item.price * item.quantity}.00</p>
+          <p className="text-sm font-black text-accent">{formatCurrency(item.price * item.quantity)}</p>
         </div>
       </div>
     </div>
@@ -133,7 +133,7 @@ const CartSlider = () => {
               <div className="space-y-4">
                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
                   <span>Subtotal</span>
-                  <span className="text-white">${getTotalPrice()}.00</span>
+                  <span className="text-white">{formatCurrency(getTotalPrice())}</span>
                 </div>
                 <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
                   <span>Shipping</span>
@@ -141,7 +141,7 @@ const CartSlider = () => {
                 </div>
                 <div className="flex justify-between items-center pt-4 border-t border-white/5">
                   <span className="text-lg font-black uppercase tracking-tighter">Total Price</span>
-                  <span className="text-2xl font-black text-accent">${getTotalPrice()}.00</span>
+                  <span className="text-2xl font-black text-accent">{formatCurrency(getTotalPrice())}</span>
                 </div>
               </div>
 
