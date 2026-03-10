@@ -146,7 +146,16 @@ const CartSlider = () => {
               </div>
 
               <div className="flex flex-col gap-4">
-                <Button variant="accent" size="xl" className="w-full" withArrow>
+                <Button 
+                  variant="accent" 
+                  size="xl" 
+                  className="w-full" 
+                  withArrow
+                  onClick={() => {
+                    closeCart();
+                    window.location.href = "/checkout";
+                  }}
+                >
                    Checkout Now
                 </Button>
                 <Button variant="ghost" size="sm" className="w-full text-zinc-500" onClick={closeCart}>

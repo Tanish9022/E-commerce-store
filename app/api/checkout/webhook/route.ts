@@ -1,61 +1,53 @@
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import crypto from "crypto";
 import connectToDatabase from "@/lib/mongodb";
 import Order from "@/models/Order";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2026-02-25.clover",
-});
-
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET as string;
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const signature = req.headers.get("stripe-signature") as string;
+  const signature = req.headers.get("x-razorpay-signature") as string;
 
-  let event: Stripe.Event;
+  const expectedSignature = crypto
+    .createHmac("sha256", webhookSecret)
+    .update(body)
+    .digest("hex");
 
-  try {
-    event = stripe.webhooks.constructEvent(body, signature, webhookSecret!);
-  } catch (err: any) {
-    console.error(`Webhook Error: ${err.message}`);
-    return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
+  if (expectedSignature !== signature) {
+    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as any;
+  const event = JSON.parse(body);
+
+  if (event.event === "order.paid") {
+    const { payload } = event;
+    const orderDetails = payload.order.entity;
+    const paymentDetails = payload.payment.entity;
 
     await connectToDatabase();
 
-    // Create Order in DB
     try {
-      // Note: We need to retrieve line items to get full details if needed
-      const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
-      
-      const products = lineItems.data.map((item: any) => ({
-        name: item.description,
-        price: item.amount_total / 100,
-        quantity: item.quantity,
-        // metadata can be passed back from product_data if needed
-      }));
+      // Parse items from notes
+      const items = JSON.parse(orderDetails.notes.items || "[]");
 
       await Order.create({
-        email: session.customer_details?.email,
-        totalAmount: session.amount_total! / 100,
-        stripeSessionId: session.id,
+        email: orderDetails.notes.email || paymentDetails.email,
+        totalAmount: orderDetails.amount / 100,
+        stripeSessionId: orderDetails.id, // Reusing field for Razorpay Order ID
         paymentStatus: "paid",
         orderStatus: "processing",
         shippingAddress: {
-          name: session.shipping_details?.name,
-          address: session.shipping_details?.address?.line1,
-          city: session.shipping_details?.address?.city,
-          postalCode: session.shipping_details?.address?.postal_code,
-          country: session.shipping_details?.address?.country,
+          name: paymentDetails.notes?.name || "Customer",
+          address: "Razorpay Checkout", // Razorpay doesn't always provide address unless configured
+          city: "",
+          postalCode: "",
+          country: "IN",
         },
-        products: products, // Simplified for webhook
+        products: items, 
       });
 
-      console.log(`Order created for session ${session.id}`);
+      console.log(`Order created for Razorpay Order ${orderDetails.id}`);
     } catch (err) {
       console.error("Order Creation Error:", err);
     }

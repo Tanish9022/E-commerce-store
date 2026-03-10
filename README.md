@@ -1,6 +1,6 @@
 # KIRO — Cinematic Custom Streetwear E-commerce
 
-KIRO is a high-performance, visually immersive e-commerce platform built with **Next.js 16**, **Fabric.js**, and **Stripe**. It features a real-time 2D customization studio, cinematic animations, and a robust administrative backend for managing custom streetwear drops.
+KIRO is a high-performance, visually immersive e-commerce platform built with **Next.js 16**, **Fabric.js**, and **Razorpay**. It features a real-time 2D customization studio, cinematic animations, and a robust administrative backend for managing custom streetwear drops.
 
 ## 🚀 Tech Stack
 
@@ -9,7 +9,7 @@ KIRO is a high-performance, visually immersive e-commerce platform built with **
 - **State Management:** Zustand
 - **Backend:** Next.js API Routes, MongoDB (Mongoose)
 - **Authentication:** JWT with Cookie-based Middleware
-- **Payments:** Stripe Checkout & Webhooks
+- **Payments:** Razorpay Orders & Webhooks
 - **Storage:** Cloudinary (Product & Design Uploads)
 - **Icons:** Lucide React
 
@@ -18,7 +18,7 @@ KIRO is a high-performance, visually immersive e-commerce platform built with **
 - **2D Design Studio:** Real-time garment customization with text, shapes, and image uploads.
 - **Cinematic UI:** High-fidelity animations and a dark-mode-first "Cyber" aesthetic.
 - **Dynamic Shop:** Filterable product catalog with detailed product views.
-- **Secure Checkout:** Full Stripe integration with automated order creation via webhooks.
+- **Secure Checkout:** Full Razorpay integration with automated order creation via webhooks.
 - **User Dashboard:** Order tracking and deployment history for customers.
 - **Admin Panel:** Comprehensive management suite for orders and product listings.
 
@@ -44,9 +44,10 @@ MONGODB_URI=your_mongodb_connection_string
 # Authentication
 JWT_SECRET=your_super_secret_key
 
-# Stripe
-STRIPE_SECRET_KEY=your_stripe_secret_key
-STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+# Razorpay
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+RAZORPAY_WEBHOOK_SECRET=your_razorpay_webhook_secret
 
 # Cloudinary
 CLOUDINARY_CLOUD_NAME=your_cloud_name
@@ -85,5 +86,5 @@ vercel
 ## 🧪 Deployment Checklist
 
 - [ ] Ensure `MONGODB_URI` is whitelisted for your production IP.
-- [ ] Configure Stripe Webhook URL to point to `https://your-domain.com/api/checkout/webhook`.
+- [ ] Configure Razorpay Webhook URL to point to `https://your-domain.com/api/checkout/webhook`.
 - [ ] Set `NODE_ENV` to `production`.
