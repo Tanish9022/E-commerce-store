@@ -106,6 +106,8 @@ export default function ShopPage() {
                   id={product._id}
                   name={product.name}
                   price={product.price}
+                  images={product.images}
+                  sizes={product.sizes}
                   category={product.category}
                   tag={product.stock < 10 ? "Low Stock" : ""}
                   className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both"
