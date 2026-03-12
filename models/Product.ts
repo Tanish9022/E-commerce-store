@@ -9,13 +9,8 @@ const ProductSchema = new mongoose.Schema({
   colors: { type: [String], default: [] },
   stock: { type: Number, default: 0 },
   category: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
-});
-
-ProductSchema.pre("save", function(next) {
-  this.updatedAt = new Date();
-  next();
+}, { 
+  timestamps: true 
 });
 
 export default mongoose.models.Product || mongoose.model("Product", ProductSchema);

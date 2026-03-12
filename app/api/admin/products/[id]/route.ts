@@ -4,12 +4,12 @@ import Product from "@/models/Product";
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await connectToDatabase();
     const body = await req.json();
-    const { id } = params;
 
     const product = await Product.findByIdAndUpdate(
       id,
@@ -29,11 +29,11 @@ export async function PUT(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await connectToDatabase();
-    const { id } = params;
 
     const product = await Product.findByIdAndDelete(id);
 
