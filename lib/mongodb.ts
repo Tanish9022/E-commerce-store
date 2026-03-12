@@ -2,8 +2,16 @@ import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-if (!MONGODB_URI && process.env.NODE_ENV === "production") {
-  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
+if (!MONGODB_URI) {
+  throw new Error(
+    "CRITICAL: MONGODB_URI is not defined. Please check your .env.local file (local) or Vercel Environment Variables (production)."
+  );
+}
+
+if (!MONGODB_URI.startsWith("mongodb://") && !MONGODB_URI.startsWith("mongodb+srv://")) {
+  throw new Error(
+    "CRITICAL: MONGODB_URI has an invalid scheme. It must start with 'mongodb://' or 'mongodb+srv://'. Current value starts with: " + MONGODB_URI.substring(0, 10)
+  );
 }
 
 let cached = (global as any).mongoose;
