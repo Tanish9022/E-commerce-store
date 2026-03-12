@@ -22,8 +22,13 @@ async function connectToDatabase() {
       bufferCommands: false,
     };
 
+    console.log("Connecting to MongoDB Atlas...");
     cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+      console.log("MongoDB Connection Established");
       return mongoose;
+    }).catch(err => {
+      console.error("MongoDB Connection Error:", err);
+      throw err;
     });
   }
   cached.conn = await cached.promise;
